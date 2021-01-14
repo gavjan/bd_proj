@@ -1,0 +1,42 @@
+doctype html
+head
+    title New Chess Game Result
+    meta(charset='UTF-8')
+    style
+        include main.css
+    script.
+        function checkform() {
+            let seen = [];
+            for(let i = 0; i < document.positions.runner.length; i++) {
+                let x = document.positions.runner[i].value;
+                if (x === "") {
+                    alert("Position " +  (i + 1) + " is empty");
+                    return false;
+                }
+                if (seen.includes(x)) {
+                    alert("'" + x + "'" + " was entered more than once")
+                    return false;
+                }
+                seen.push(x);
+            }
+        }
+
+.topnav
+    a(style="float: left" href='./run') « Back
+div(style='text-align:center')
+    h1(style='font-size: 80px') 🏃Runs
+
+h2 Race Results
+form(name="positions" action="/upload_run" method="POST" style="clear:both;")
+    ul
+        li
+            input.pos_box(type="text", placeholder="1st", name="runner")
+        li
+            input.pos_box(type="text", placeholder="2nd", name="runner")
+        li
+            input.pos_box(type="text", placeholder="3rd", name="runner")
+        li
+            input.pos_box(type="text", placeholder="4th", name="runner")
+
+    br
+    input#submit_button.active_button(type="submit", name="submit", value="Submit", onClick="return checkform();")

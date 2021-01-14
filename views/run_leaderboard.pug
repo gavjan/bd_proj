@@ -1,0 +1,27 @@
+doctype html
+head
+    title Chess Home
+    meta(charset='UTF-8')
+    style
+        include main.css
+
+.topnav
+    a(style="float: left" href='./run') « Back
+
+div(style='text-align:center')
+    h1(style='font-size: 80px') 🏃Runs
+    h2(style='font-size: 80px') Top Runners Leaderboard
+    table
+        tr
+            th Pos
+            th Name
+            th 🥇
+            th 🥈
+            th 🥉
+        each row in rows
+            tr
+                td= row.pos
+                td(style="text-align: left; padding-left: 0.5%")= row.name
+                td= row.first
+                td= row.second
+                td= row.third
