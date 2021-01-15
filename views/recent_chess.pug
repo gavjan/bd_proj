@@ -1,0 +1,27 @@
+doctype html
+head
+    title Chess Home
+    meta(charset='UTF-8')
+    style
+        include main.css
+
+.topnav
+    a(style="float: left" href='./chess') « Back
+
+div(style='text-align:center')
+    h1(style='font-size: 80px') ♟️Chess
+    h2(style='font-size: 80px') Recent Games
+    table
+        tr
+            th white
+            th black
+            th result
+            th date
+        each row in rows
+            tr
+                td
+                    a(href='./profile?id=' + row.white)=row.white
+                td
+                    a(href='./profile?id=' + row.black)=row.black
+                td= row.result
+                td= row.date

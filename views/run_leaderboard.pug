@@ -21,7 +21,8 @@ div(style='text-align:center')
         each row in rows
             tr
                 td= row.pos
-                td(style="text-align: left; padding-left: 0.5%")= row.name
+                td
+                    a(href='./profile?id=' + row.name)=row.name
                 td= row.first
                 td= row.second
                 td= row.third

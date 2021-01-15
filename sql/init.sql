@@ -20,14 +20,16 @@ CREATE TABLE PlayerRunScore (
 CREATE TABLE ChessGame (
 	white_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	black_id VARCHAR2(40) NOT NULL REFERENCES Player,
-	result NUMBER(4) NOT NULL
+	result NUMBER(4) NOT NULL,
+    game_date DATETIME NOT NULL
 );
 
 CREATE TABLE Run (
 	first_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	second_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	third_id VARCHAR2(40) NOT NULL REFERENCES Player,
-	forth_id VARCHAR2(40) NOT NULL REFERENCES Player
+	forth_id VARCHAR2(40) NOT NULL REFERENCES Player,
+    game_date DATETIME NOT NULL
 );
 
 CREATE TRIGGER after_insert_player
@@ -57,9 +59,4 @@ BEGIN
         INSERT OR IGNORE INTO Player VALUES (NEW.white_id, 1500);
         INSERT OR IGNORE INTO Player VALUES (NEW.black_id, 1500);
         UPDATE Player SET chess_elo=1500 WHERE chess_elo IS NULL AND (name=NEW.white_id OR name=new.black_id);
-        UPDATE Player SET chess_elo
 END;
-
-
-
-

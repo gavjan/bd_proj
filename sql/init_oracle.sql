@@ -20,14 +20,16 @@ CREATE TABLE PlayerRunScore (
 CREATE TABLE ChessGame (
 	white_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	black_id VARCHAR2(40) NOT NULL REFERENCES Player,
-	result NUMBER(4) NOT NULL
+	result NUMBER(4) NOT NULL,
+	game_date DATE NOT NULL
 );
 
 CREATE TABLE Run (
 	first_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	second_id VARCHAR2(40) NOT NULL REFERENCES Player,
 	third_id VARCHAR2(40) NOT NULL REFERENCES Player,
-	forth_id VARCHAR2(40) NOT NULL REFERENCES Player
+	forth_id VARCHAR2(40) NOT NULL REFERENCES Player,
+    game_date DATE NOT NULL
 );
 
 CREATE OR REPLACE TRIGGER after_insert_player

@@ -19,5 +19,6 @@ div(style='text-align:center')
         each row in rows
             tr
                 td= row.pos
-                td= row.name
+                td
+                    a(href='./profile?id=' + row.name)=row.name
                 td= row.elo
