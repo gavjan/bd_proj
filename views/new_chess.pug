@@ -9,21 +9,26 @@ head
             let player1 = document.getElementById("player1").value;
             let player2 = document.getElementById("player2").value;
             let result = document.chess_players.result.value;
-            let err_msg = "none";
+            let username_regex = /^[a-z0-9_]+[a-z0-9_ ]*$/i;
+            let err_msg = "";
+
             if(result === "")
-                err_msg = "Game's result isn't selected";
+                err_msg += "- Game's result isn't selected\n";
 
             if(player1 === player2)
-                err_msg = "Same player's name was entered twice";
+                err_msg += "- Same player's name was entered twice\n";
 
-            if(player2 === "")
-                err_msg = "Black's field is empty";
+            if (player2 === "")
+                err_msg += "- Black's name field is empty\n";
+            else if (!player2.match(username_regex))
+                err_msg += "- Black's name must be alphanumeric with space and _ \n";
 
-            if(player1 === "")
-                err_msg = "White's field is empty";
+            if (player1 === "")
+                err_msg += "- White's name field is empty\n";
+            else if (!player1.match(username_regex))
+                err_msg += "- White's name must be alphanumeric with space and _ \n";
 
-
-            if(err_msg !== "none") {
+            if(err_msg !== "") {
                 alert(err_msg);
                 return false;
             }

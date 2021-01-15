@@ -183,6 +183,7 @@ table {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 2%;
 }
 
 th, td {
@@ -231,4 +232,8 @@ h2 {
     height: 75%;
     font-size: 300%;
     margin: 0.5%;
+}
+
+td a, a:visited{
+    color: inherit;
 }

@@ -20,8 +20,8 @@ div(style='text-align:center')
         each row in rows
             tr
                 td
-                    a(href='./profile?id=' + row.white)=row.white
+                    a(href='./profile?id=' + row.white_id)=row.white_id
                 td
-                    a(href='./profile?id=' + row.black)=row.black
+                    a(href='./profile?id=' + row.black_id)=row.black_id
                 td= row.result
-                td= row.date
+                td= row.game_date

@@ -59,99 +59,113 @@ server.get('/new_run', function(req, res) {
 });
 server.get('/chess_leaderboard', function(req, res) {
     let leaderboard = []
-    let sql = 'SELECT name, chess_elo FROM Player WHERE chess_elo IS NOT NULL ORDER BY chess_elo DESC;';
+    let sql = 'SELECT name, chess_elo FROM Player WHERE chess_elo IS NOT NULL ORDER BY chess_elo DESC LIMIT 10;';
     db.all(sql, [], (err, rows) => {
         if(err) throw (err);
         let i = 1;
         for(let {name, chess_elo} of rows) {
             leaderboard.push({
-                pos: i,
+                pos: i++,
                 name: name,
                 elo: chess_elo
             });
-            i++;
-            if(i > 10) break;
         }
         res.render('chess_leaderboard', {
             rows: leaderboard
         });
     });
 });
-server.get('/profile', function(req, res) {
-    let name = "gabjan";
-    let sql = "SELECT chess_elo, overall, first, second, third, forth FROM Player JOIN PlayerRunScore ON name = ? AND player_id = name ;";
-    db.all(sql, [name], (err, rows) => {
-        if(err) throw (err);
-        // :TODO Implement
-
-        console.log(rows);
-    });
-});
-
-server.get('/recent_runs', function(req, res) {
-    let runs = [];
-    let sql = 'SELECT first_id, second_id, third_id, forth_id, game_date FROM Run ORDER BY game_date DESC;';
-    db.all(sql, [], (err, rows) => {
-        if(err) throw (err);
-        let i = 1;
-        for(let {first_id, second_id, third_id, forth_id, game_date} of rows) {
-            runs.push({
-                first: first_id,
-                second: second_id,
-                third: third_id,
-                forth: forth_id,
-                date: game_date
-            });
-            i++;
-            if(i > 10) break;
-        }
-        res.render('recent_runs', {
-            rows: runs
-        });
-    });
-});
-server.get('/recent_chess', function(req, res) {
-    let games = []
-    let sql = 'SELECT white_id, black_id, result, game_date FROM ChessGame ORDER BY game_date DESC;';
-    db.all(sql, [], (err, rows) => {
-        if(err) throw (err);
-        let i = 1;
-        for(let {white_id, black_id, result, game_date} of rows) {
-            games.push({
-                white: white_id,
-                black: black_id,
-                result: {0: "White Victory", 0.5: "Draw", 1: "Black Victory"}[result],
-                date: game_date
-            });
-            i++;
-            if(i > 10) break;
-        }
-        res.render('recent_chess', {
-            rows: games
-        });
-    });
-});
 server.get('/run_leaderboard', function(req, res) {
     let leaderboard = []
-    let sql = 'SELECT first, second, third, player_id FROM PlayerRunScore WHERE overall!=0 ORDER BY overall DESC;';
+    let sql = 'SELECT first, second, third, player_id FROM PlayerRunScore WHERE overall!=0 ORDER BY overall DESC LIMIT 10;';
     db.all(sql, [], (err, rows) => {
         if(err) throw (err);
         let i = 1;
         for(let {first, second, third, player_id} of rows) {
             leaderboard.push({
-                pos: i,
+                pos: i++,
                 name: player_id,
                 first: first,
                 second: second,
                 third: third
             });
-            i++;
-            if(i > 10) break;
         }
         res.render('run_leaderboard', {
             rows: leaderboard
         });
     });
+});
+server.get('/recent_runs', function(req, res) {
+    let sql = 'SELECT first_id, second_id, third_id, forth_id, game_date FROM Run ORDER BY game_date DESC LIMIT 10;';
+    db.all(sql, [], (err, rows) => {
+        if(err) throw (err);
+        
+        res.render('recent_runs', {
+            rows: rows
+        });
+    });
+});
+server.get('/recent_chess', function(req, res) {
+    let games = []
+    let sql = 'SELECT white_id, black_id, result, game_date FROM ChessGame ORDER BY game_date DESC LIMIT 10;';
+    db.all(sql, [], (err, rows) => {
+        if(err) throw (err);
+
+        for(let i = 0; i < rows.length; i++)
+                rows[i].result = {0: "White Victory", 0.5: "Draw", 1: "Black Victory"}[rows[i].result];
+
+        res.render('recent_chess', {
+            rows: rows
+        });
+    });
+});
+server.get('/profile', function(req, res) {
+    let name = req.query.id;
+    let data = {
+        player: {},
+        chess: [],
+        runs: []
+    };
+    if(name == undefined) res.render('chess');
+    else {
+        let sql = "SELECT name, chess_elo, overall, first, second, third, forth FROM Player JOIN PlayerRunScore ON name = ? AND player_id = name ;";
+        db.all(sql, [name], (err, rows) => {
+            if(err) throw (err);
+
+            if(!rows.length) res.render('chess');
+            else {
+                data.player = rows[0];
+
+                sql = 'SELECT white_id, black_id, result, game_date FROM ChessGame WHERE white_id=? OR black_id=? ORDER BY game_date DESC LIMIT 10;';
+                db.all(sql, [name, name], (err, rows) => {
+                    if(err) throw (err);
+                    data.chess = rows;
+
+                    sql = 'SELECT first_id, second_id, third_id, forth_id, game_date FROM Run WHERE ' +
+                        'first_id=? ' +
+                        'OR second_id=? ' +
+                        'OR third_id=? ' +
+                        'OR forth_id=? ' +
+                        'ORDER BY game_date DESC LIMIT 10;';
+                    db.all(sql, [name,name,name,name], (err, rows) => {
+                        if(err) throw (err);
+                        for(let i = 0; i < rows.length; i++) {
+                            rows[i].first_css = rows[i].first_id === name ? "font-weight: bold":"";
+                            rows[i].second_css = rows[i].second_id === name ? "font-weight: bold":"";
+                            rows[i].third_css = rows[i].third_id === name ? "font-weight: bold":"";
+                            rows[i].forth_css = rows[i].forth_id === name ? "font-weight: bold":"";
+                        }
+                        console.log(data);
+                        data.runs = rows;
+                        res.render('profile', {
+                            data: data
+                        });
+                    });
+                });
+            }
+        });
+    }
+
 });
 server.get('/run', function(req, res) {
     res.render('run');

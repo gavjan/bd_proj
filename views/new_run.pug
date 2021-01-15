@@ -7,10 +7,14 @@ head
     script.
         function checkform() {
             let seen = [];
+            let username_regex = /^[a-z0-9_]+[a-z0-9_ ]*$/i;
             for(let i = 0; i < document.positions.runner.length; i++) {
                 let x = document.positions.runner[i].value;
                 if (x === "") {
                     alert("Position " +  (i + 1) + " is empty");
+                    return false;
+                } else if(!x.match(username_regex)) {
+                    alert("Name for position " +  (i + 1) + " must be alphanumeric with space and _");
                     return false;
                 }
                 if (seen.includes(x)) {

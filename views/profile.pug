@@ -1,0 +1,52 @@
+doctype html
+head
+    title Chess Home
+    meta(charset='UTF-8')
+    style
+        include main.css
+
+.topnav
+    a(style="float: left" href='./chess') « Back
+
+div(style='text-align:center')
+    h1(style='font-size: 80px') Player Profile
+    a(style="float: left; font-size: 400%;" +
+    "width: 100%; margin-bottom: 1%")= data.player.name
+    div(style="clear:both;font-size: 60%")
+        div(style='float: left; width: 50%')
+            a(style='font-size: 500%; font-weight: bold') Recent Runs
+            table(style="margin-top: 2%")
+                tr
+                    th 🥇
+                    th 🥈
+                    th 🥉
+                    th 4th
+                    th date
+                each row in data.runs
+                    tr
+                        td
+                            a(style=row.first_css href='./profile?id=' + row.first_id)=row.first_id
+                        td
+                            a(style=row.second_css href='./profile?id=' + row.second_id)=row.second_id
+                        td
+                            a(style=row.third_css href='./profile?id=' + row.third_id)=row.third_id
+                        td
+                            a(style=row.forth_css href='./profile?id=' + row.forth_id)=row.forth_id
+                        td= row.game_date
+        div(style='float: right; width: 50%')
+            a(style='font-size: 500%; font-weight: bold; mar') Recent Chess Games
+            table(style="margin-top: 2%")
+                tr
+                    th white
+                    th black
+                    th result
+                    th date
+                each row in data.chess
+                    tr
+                        td
+                            a(href='./profile?id=' + row.white_id)=row.white_id
+                        td
+                            a(href='./profile?id=' + row.black_id)=row.black_id
+                        td= row.result
+                        td= row.game_date
+

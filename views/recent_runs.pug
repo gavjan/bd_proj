@@ -21,11 +21,11 @@ div(style='text-align:center')
         each row in rows
             tr
                 td
-                    a(href='./profile?id=' + row.first)=row.first
+                    a(href='./profile?id=' + row.first_id)=row.first_id
                 td
-                    a(href='./profile?id=' + row.second)=row.second
+                    a(href='./profile?id=' + row.second_id)=row.second_id
                 td
-                    a(href='./profile?id=' + row.third)=row.third
+                    a(href='./profile?id=' + row.third_id)=row.third_id
                 td
-                    a(href='./profile?id=' + row.forth)=row.forth
-                td= row.date
+                    a(href='./profile?id=' + row.forth_id)=row.forth_id
+                td= row.game_date
